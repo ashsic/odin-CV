@@ -4,50 +4,54 @@ function WorkSection() {
   const [isDisplayed, setIsDisplayed] = useState(false);
   const showForm = () => setIsDisplayed(!isDisplayed);
 
-  const [workExperiences, setWorkExperiences] = useState([
-    {
-      id: 1,
-      company: "test company",
-      title: "Software Engineer",
-      startDate: "2014/02/02",
-      endDate: "2017/03/04",
-      description: "Worked as a software engineer for 'test company'. Did lots of testing and worked hard."
-    },
-    {
-      id: 2,
-      company: "test company 2",
-      title: "Software Architect",
-      startDate: "2018/02/02",
-      endDate: "2021/03/04",
-      description: "Worked as a software architect for 'test company 2'. Did lots of architecting and worked hard."
-    },
-  ]);
-
-  const [idCounter, setIdCounter] = useState(3);
-
-  const incrementIdCounter = () => {
-    setIdCounter(idCounter + 1);
-  }
+  const [workExperiences, setWorkExperiences] = useState({idctr: 3, 
+    jobs: [
+      {
+        id: 1,
+        company: "test company",
+        title: "Software Engineer",
+        startDate: "2014/02/02",
+        endDate: "2017/03/04",
+        description: "Worked as a software engineer for 'test company'. Did lots of testing and worked hard."
+      },
+      {
+        id: 2,
+        company: "test company 2",
+        title: "Software Architect",
+        startDate: "2018/02/02",
+        endDate: "2021/03/04",
+        description: "Worked as a software architect for 'test company 2'. Did lots of architecting and worked hard."
+      },
+    ]
+  });
 
   const filterWork = (event) => {
-    const newExperiences = workExperiences.filter(job => job.id != event.target.id);
-    setWorkExperiences(newExperiences);
+    const newExperiences = workExperiences.jobs.filter(job => job.id != event.target.id);
+    setWorkExperiences({
+      idctr: workExperiences.idctr,
+      jobs: newExperiences
+    });
   }
 
   const addWork = (event) => {
     event.preventDefault();
     const parentContainer = event.target.parentElement;
-    let newExperiences = workExperiences;
-    newExperiences.push({
-      id: idCounter,
-      company: parentContainer.querySelector('#companyName').value,
-      title: parentContainer.querySelector('#jobTitle').value,
-      startDate: parentContainer.querySelector('#jobStartDate').value,
-      endDate: parentContainer.querySelector('#jobEndDate').value,
-      description: parentContainer.querySelector('#jobDescription').value
+
+    setWorkExperiences({
+      idctr: workExperiences.idctr + 1,
+      jobs: [
+        ...workExperiences.jobs, 
+        {
+          id: workExperiences.idctr + 1,
+          company: parentContainer.querySelector('#companyName').value,
+          title: parentContainer.querySelector('#jobTitle').value,
+          startDate: parentContainer.querySelector('#jobStartDate').value,
+          endDate: parentContainer.querySelector('#jobEndDate').value,
+          description: parentContainer.querySelector('#jobDescription').value
+        }
+      ]
     });
-    incrementIdCounter();
-    setWorkExperiences(newExperiences);
+
     showForm();
   }
 
@@ -92,7 +96,7 @@ function WorkSection() {
       }
 
       <ul>
-        {workExperiences.map((job) => {
+        {workExperiences.jobs.map((job) => {
           return (
             <li key={job.id}>
               <div>
@@ -105,12 +109,8 @@ function WorkSection() {
           )
         })}
       </ul>
-
     </div>
-
-  )
-
-
+  );
 }
 
 export default WorkSection;
